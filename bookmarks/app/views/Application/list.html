@@ -1,0 +1,52 @@
+#{extends 'main.html' /}
+#{set title:'List' /}
+
+<table>
+    <thead>
+        <tr>
+            <th class="title">Title</th>
+            <th class="url">Url</th>
+            <th class="edit"></th>
+        </tr>
+    </thead>
+    <tbody>
+	#{list bookmarks, as:'bookmark'}
+        <tr class="bookmark">
+            <td id="title-${bookmark.id}">${bookmark.title}</td>
+            <td id="url-${bookmark.id}"><a target="_NEW" href="${bookmark.url}">open</a></td>
+            <td><a href="@{form(bookmark.id)}">&gt;</a></td>
+        </tr>
+        #{/list}
+        <tr>
+	        #{form @save()}
+            <td><input type="text" name="bookmark.title"></td>
+            <td><input type="text" name="bookmark.url"></td>
+            <td><input type="submit" value="+"></td>
+	        #{/form}
+        </tr>
+    </tbody>
+</table>
+
+<script type="text/javascript">
+
+    // In place edition
+    $(".bookmark td").editInPlace({
+        bg_over: 'transparent',
+        callback: function(el, n, o) {
+            var m = /([a-z]+)-(\d+)/.exec(el), data = {}
+            data['bookmark.id'] = m[2]
+            data['bookmark.' + m[1]] = n
+
+            // Save result
+            $.ajax({
+                url: '@{save()}',
+                type: 'POST',
+                data: data,
+                success: function() {$('#' + el).html(n)},
+                error: function() {$('#' + el).html(o)}
+            })
+
+            return true
+        }
+    })
+</script>

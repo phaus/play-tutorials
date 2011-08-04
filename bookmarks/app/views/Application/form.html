@@ -1,0 +1,22 @@
+#{extends 'main.html' /}
+#{set title:'Form' /}
+
+#{form @save()}
+    <input type="hidden" name="bookmark.id" value="${bookmark?.id}">
+
+    <p class="field">
+        <label for="name">Title:</label>
+        <input type="text" id="title" name="bookmark.title" value="${bookmark?.title}">
+        <span class="error">${errors.forKey('bookmark.title')}</span>
+    </p>
+
+    <p class="field">
+        <label for="firstname">URL:</label>
+        <input type="text" id="url" name="bookmark.url" value="${bookmark?.url}">
+        <span class="error">${errors.forKey('bookmark.url')}</span>
+    </p>
+
+    <p class="buttons">
+     	<a href="@{list()}">Cancel</a> or <input type="submit" value="Save">
+    </p>
+#{/form}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    	<title></title>
+    	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <link rel="stylesheet" type="text/css" media="screen" href="@{'public/stylesheets/main.css'}" />
+    	<script src="@{'public/javascripts/jquery-1.4.min.js'}" type="text/javascript" charset="utf-8"></script>
+    	<script src="@{'public/javascripts/jquery-ui-1.7.2.custom.min.js'}" type="text/javascript" charset="utf-8"></script>
+    	<script src="@{'public/javascripts/jquery.editinplace.packed.js'}" type="text/javascript" charset="utf-8"></script>
+    </head>
+	<body>
+	    <div>
+    		<header>
+                    <h1>Your Bookmarks</h1>
+    		</header>
+    		<nav>
+    			<a id="home" href="@{index()}" class="${request.action =~ /index/ ? 'selected' : ''}">Home</a>
+    			<a id="list" href="@{list()}" class="${request.action =~ /list/ ? 'selected' : ''}">List</a>
+    			<a id="new" href="@{form()}" class="${request.action =~ /form|save/ ? 'selected' : ''}">New</a>
+    		</nav>
+    		<section>
+                    <p>
+    		    #{doLayout /}
+                    </p>
+    		</section>
+    		<footer>
+    			inspired by Zencontact, by zenexity -
+    			<a href="http://www.playframework.org/">playframework</a>
+    		</footer>
+		</div>
+	</body>
+</html>
