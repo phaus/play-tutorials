@@ -1,0 +1,6 @@
+#{extends 'main.html' /}
+#{set title:'upload VCard' /}
+<form action="@{VCards.read()}" method="POST" enctype="multipart/form-data">
+    <input type="file" id="vcard" name="vcard" />
+    <input type="submit" value="Send it..." />
+</form>
