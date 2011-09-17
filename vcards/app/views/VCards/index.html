@@ -2,13 +2,9 @@
 #{set title:'VCards index' /}
 <a href="@{VCards.form()}">VCards Upload</a>
 <table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Content</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr><td></td><td></td></tr>
-    </tbody>
+#{verbatim}
+#{list cards, as:'card'}
+${card.toTableRow()}
+#{/list}
+#{/verbatim}
 </table>

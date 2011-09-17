@@ -2,6 +2,13 @@
 #{set title:'VCards content' /}
 <a href="@{VCards.index()}">VCards Index</a>
 <hr />
-<textarea rows="120" cols="80">
+# VCards: ${count}
+<ul>
+#{list cards, as:'card'}
+    <li>${card}</li>
+#{/list}
+</ul>
+<hr />
+<textarea rows="45" cols="120">
 ${content}
 </textarea>

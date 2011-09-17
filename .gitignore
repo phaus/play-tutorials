@@ -11,10 +11,20 @@ bookmarks/nbproject
 
 bookmarks/public/.DS_Store
 
-.DS_Store
+**/.DS_Store
 
 bookmarks/public/javascripts/.DS_Store
 
-vcards/db/h2/play.h2.db
+vcards/db
+
+vcards/tmp/*
 
 vcards/nbproject/project.xml
+
+vcards/tmp/classes/models/VCard.class
+
+.DS_Store
+
+vcards/test/single.vcf
+
+vcards/test/group.vcf

@@ -6,7 +6,10 @@
  */
 package controllers;
 
+import helper.VCardHelper;
 import java.io.File;
+import java.util.List;
+import models.VCard;
 import play.Logger;
 import play.libs.IO;
 import play.mvc.Controller;
@@ -22,11 +25,14 @@ public class VCards extends Controller {
     public static void read(File vcard){
         Logger.info("tmp file: "+vcard.getAbsolutePath());
         String content = IO.readContentAsString(vcard);
-        render(content);
+        int count = VCardHelper.countVCards(content);
+        List<VCard> cards = VCardHelper.createVCsWithContent(content);
+        render(cards, content, count);
     }
 
     public static void index() {
-        render();
+        List<VCard> cards = VCard.findAll();
+        render(cards);
     }
 
     public static void form() {
