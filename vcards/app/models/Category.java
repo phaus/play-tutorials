@@ -15,7 +15,7 @@ public class Category extends Model {
     public String label;
 
     @ManyToOne
-    public VCard owner;
+    public VCard card;
     
     public Category(String label){
         this.label = label;

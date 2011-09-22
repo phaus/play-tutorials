@@ -17,8 +17,8 @@ import play.db.jpa.Model;
 public class Contact extends Model {
 
     @ManyToOne
-    public VCard owner;
-    @OneToMany(mappedBy="owner")
+    public VCard card;
+    @OneToMany(mappedBy="contact")
     public List<Type> types;
     public String label;
     public String value;
@@ -28,16 +28,18 @@ public class Contact extends Model {
     }
     
     public void addType(String label){
-        Type type = Type.find(" label = ?", label).first();
+        Type type = Type.find(" label = ? and contact = ?", label, this).first();
         if(type == null){
             type = new Type(label);
+            type.contact = this;
         }
+        type.save();
         this.types.add(type);
     }
 
     public List<Type> getTypes(){
         if(this.types == null){
-            this.types = Type.find(" owner = ?", this.id).fetch();
+            this.types = Type.find(" contact = ?", this.id).fetch();
         }
         return this.types;
     }
@@ -48,6 +50,7 @@ public class Contact extends Model {
         sb.append(label);
         sb.append(": ");
         sb.append(value);
+        sb.append(" ");
         for(Type type : this.getTypes()){
             sb.append(type);
             sb.append(" ");

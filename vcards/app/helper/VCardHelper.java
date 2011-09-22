@@ -9,14 +9,13 @@ package helper;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import models.Contact;
 import models.VCard;
-import play.Logger;
 
 public class VCardHelper {
 
     public enum KEYS {
-        VERSION, N, FN, NICKNAME, CATEGORIES, ORG, XABSHOWAS
+
+        VERSION, N, FN, NICKNAME, CATEGORIES, ORG, XABSHOWAS, TITLE, NOTE, SORTSTRING, CLASS, BDAY, PRODID, UID
     };
 
     public static List<VCard> createVCsWithContent(String content) {
@@ -47,6 +46,9 @@ public class VCardHelper {
             if (line.startsWith("X-ABUID:")) {
                 return line.replace("X-ABUID:", "");
             }
+            if (line.startsWith("UID:")) {
+                return line.replace("UID:", "");
+            }
         }
         return "";
     }
@@ -64,14 +66,15 @@ public class VCardHelper {
             if (line.startsWith("PHOTO;BASE64:")) {
                 parts = content.split("PHOTO;BASE64:");
                 card.photo = createAvatarFromContent(parts[1]);
-            } else if(!line.startsWith("X-ABUID:")
+            } else if (!line.startsWith("X-ABUID:")
+                    && !line.startsWith("UID")
                     && !line.startsWith("END:VCARD")
-                    && !line.startsWith("item")){
+                    && !line.startsWith("item")) {
 
                 parts = line.split(":");
                 if (parts.length > 1 && parts[0].split(";").length > 1) {
                     card.save();
-                    card = addContact(card, parts[0], parts[1]);
+                    card.addContact(parts[0], parts[1]);
                 } else if (parts.length > 1) {
                     //card.values.put(parts[0], parts[1]);
                     switch (KEYS.valueOf(parts[0].replace("-", "").toUpperCase())) {
@@ -85,13 +88,29 @@ public class VCardHelper {
                             card.nickName = parts[1];
                             break;
                         case CATEGORIES:
+                            card.save();
                             card.addCategories(parts[1]);
                             break;
                         case ORG:
-                            card.organisation = parts[1];
+                            card.organisation = parts[1].substring(0, parts[1].length() - 1);
+                            break;
+                        case SORTSTRING:
+                            card.nickName = parts[1];
+                            break;
+                        case NOTE:
+                            card.note = parts[1];
+                            break;
+                        case TITLE:
+                            card.title = parts[1];
                             break;
                         case XABSHOWAS:
                             card.showAs = parts[1];
+                            break;
+                        case CLASS:
+                            card.addContact("CLASS", "value=access:"+parts[1]);
+                            break;
+                        case BDAY:
+                            card.addContact("BDAY", "value=date:"+parts[1]);
                             break;
                         default:
                     }
@@ -99,25 +118,6 @@ public class VCardHelper {
             }
         }
         card.save();
-        return card;
-    }
-
-    public static VCard addContact(VCard card, String key, String value) {
-        String keyParts[] = key.split(";");
-        String keyValue[] = null;
-        Contact contact = new Contact();
-        contact.value = value;
-        contact.save();
-        for (String part : keyParts) {
-            keyValue = part.split("=");
-            if (keyValue.length > 1) {
-                contact.addType(keyValue[1]);
-            } else {
-                contact.label = part;
-            }
-        }
-        contact.save();
-        card.addContact(contact);
         return card;
     }
 

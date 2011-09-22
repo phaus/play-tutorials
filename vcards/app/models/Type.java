@@ -14,7 +14,7 @@ import play.db.jpa.Model;
 public class Type extends Model {
     public String label;
     @ManyToOne
-    public Contact owner;
+    public Contact contact;
     public Type(String label){
         this.label = label;
     }
