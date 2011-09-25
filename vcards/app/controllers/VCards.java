@@ -25,6 +25,11 @@ public class VCards extends Controller {
     public static void read(File vcard){
         Logger.info("tmp file: "+vcard.getAbsolutePath());
         String content = IO.readContentAsString(vcard);
+        String encoding = VCardHelper.checkGetEncoding(content);
+        if(!encoding.equals("UTF-8")){
+            Logger.info("encoding is: "+encoding);
+            content = IO.readContentAsString(vcard, encoding);
+        }
         int count = VCardHelper.countVCards(content);
         List<VCard> cards = VCardHelper.createVCsWithContent(content);
         render(cards, content, count);

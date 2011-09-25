@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import play.db.jpa.Model;
@@ -30,7 +31,7 @@ public class VCard extends Model {
     public String note;
     @OneToMany(mappedBy = "card")
     public List<Contact> contacts;
-    @OneToMany(mappedBy = "card")
+    @ManyToMany
     public List<Category> categories;
 
     public VCard() {
@@ -68,14 +69,12 @@ public class VCard extends Model {
         String categoriesLabels[] = categoriesString.split(",");
         Category category = null;
         for (String categoryLabel : categoriesLabels) {
-            category = Category.find(" label = ? and card = ?", categoryLabel, this).first();
-            if (category == null) {
-                category = new Category(categoryLabel);
-                category.card = this;
+            category = Category.findOrCreatyByLabel(categoryLabel);
+            if(!this.categories.contains(category)){
+                this.categories.add(category);
             }
-            category.save();
-            this.categories.add(category);
         }
+        this.save();
     }
 
     public void addContact(String key, String value) {
@@ -110,6 +109,7 @@ public class VCard extends Model {
         this.contacts.add(contact);
     }
 
+
     @Override
     public String toString() {
         /*
@@ -120,7 +120,7 @@ public class VCard extends Model {
         sb.append("]");
         return sb.toString();
          */
-        return "";
+        return this.fullName;
     }
 
     public String toTableRow() {
@@ -148,4 +148,6 @@ public class VCard extends Model {
         sb.append("</tr>");
         return sb.toString();
     }
+
+
 }

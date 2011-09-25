@@ -12,6 +12,20 @@ import java.util.List;
 import models.VCard;
 
 public class VCardHelper {
+    /**
+     * URL;type=WORK;type=pref:http\://www.example.com
+     * parts = ["URL;type=WORK;type=pref", "http\", "//www.example.com"]
+     * @param parts
+     * @return
+     */
+    private static String[] fixForUrl(String line) {
+        line = line.replace("\\:", "####");
+        String parts[] = line.split(":");
+        for(int i=0; i < parts.length; i++){
+            parts[i] = parts[i].replace("####", ":");
+        }
+        return parts;
+    }
 
     public enum KEYS {
 
@@ -53,6 +67,17 @@ public class VCardHelper {
         return "";
     }
 
+    public static String checkGetEncoding(String content){
+        for(String line : content.split("\n")){
+            if(line.contains("CHARSET=")){
+                String parts[] = line.split("CHARSET=");
+                parts = parts[1].split(":");
+                return parts[0].trim();
+            }
+        }
+        return "UTF-8";
+    }
+    
     public static VCard createVCWithContent(String content) {
         String uid = getUid(content);
         VCard card = VCard.findByUid(uid);
@@ -72,6 +97,9 @@ public class VCardHelper {
                     && !line.startsWith("item")) {
 
                 parts = line.split(":");
+                if(line.startsWith("URL")){
+                    parts = fixForUrl(line);
+                }
                 if (parts.length > 1 && parts[0].split(";").length > 1) {
                     card.save();
                     card.addContact(parts[0], parts[1]);

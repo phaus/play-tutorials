@@ -8,7 +8,7 @@ POST    /vcards/read             VCards.read
 GET    /vcards             VCards.index
 
 # Home page
-GET     /                                       Application.index
+GET     /                                       VCards.index
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

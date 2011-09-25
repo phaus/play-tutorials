@@ -7,22 +7,29 @@
 package models;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import play.db.jpa.Model;
 
 @Entity
 public class Category extends Model {
     public String label;
 
-    @ManyToOne
-    public VCard card;
     
     public Category(String label){
         this.label = label;
+    }
+
+    public static Category findOrCreatyByLabel(String label){
+        Category category = Category.find(" label = ?", label).first();
+        if(category == null){
+            category = new Category(label);
+            category.save();
+        }
+        return category;
     }
 
     @Override
     public String toString(){
         return label;
     }
+
 }
