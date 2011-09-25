@@ -15,16 +15,18 @@ bookmarks/public/.DS_Store
 
 bookmarks/public/javascripts/.DS_Store
 
-vcards/db
+vcards/db/*
 
 vcards/tmp/*
 
 vcards/nbproject/project.xml
 
-vcards/tmp/classes/models/VCard.class
+vcards/tmp/*
 
 .DS_Store
 
 vcards/test/single.vcf
 
 vcards/test/group.vcf
+
+**/nbproject
