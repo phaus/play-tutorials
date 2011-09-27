@@ -1,10 +1,29 @@
 #{extends 'main.html' /}
 #{set title:'VCards index' /}
+<script type="text/javascript">
+    var listAction = #{jsAction @_show(':uid')  /};
+    function load(id){
+        $('#result').load(
+            listAction({uid: id}),
+            function() {
+                $('#content').css('visibility', 'visible')
+            }
+        )
+    }
+
+</script>
+
 <a href="@{VCards.form()}">VCards Upload</a>
-<table>
-#{verbatim}
-#{list cards, as:'card'}
-${card.toTableRow()}
-#{/list}
-#{/verbatim}
-</table>
+#{paginate.controls items:paginator /}
+<hr />
+<ul style="float:left">
+    #{paginate.list items:paginator, as:'card'}
+    <li><a href="javascript:load(${card.id})">${card}</a></li>
+    #{/paginate.list}
+</ul>
+<div style="width:50%;padding:10px;float:left" id="result">
+
+</div>
+<div style="clear:both"></div>
+<hr />
+#{paginate.controls items:paginator /}

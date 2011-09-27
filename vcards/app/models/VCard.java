@@ -11,24 +11,26 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import play.db.jpa.Model;
 
 @Entity
 public class VCard extends Model {
-    //public HashMap<String,String> values = new HashMap<String, String>();
 
     @Transient
     public File photo;
-    public String uid;
     public String name;
     public String nickName;
     public String fullName;
-    public String organisation;
+    @ManyToOne
+    public Organisation organisation;
     public String showAs;
     public String title;
     public String note;
+    public String birthday;
+    
     @OneToMany(mappedBy = "card")
     public List<Contact> contacts;
     @ManyToMany
@@ -43,8 +45,17 @@ public class VCard extends Model {
         return VCard.find(" name = ? and fullName = ?", name, fullName).first();
     }
 
-    public static VCard findByUid(String uid) {
-        return VCard.find(" uid = ?", uid).first();
+    /**
+     * Needs to find the best Match (1. Fullname 2. Fullname & Birthday).
+     * @param fullName
+     * @param birthday
+     * @return
+     */
+    public static VCard findByFullNameAndBirthday(String fullName, String birthday) {
+        if(VCard.find(" fullName = ?", fullName).fetch().size() == 1){
+            return VCard.find(" fullName = ?", fullName).first();
+        }
+        return VCard.find(" fullName = ? and birthday = ?", fullName, birthday).first();
     }
 
     public static VCard findByName(String name) {
@@ -91,7 +102,7 @@ public class VCard extends Model {
         for (String part : keyParts) {
             keyValue = part.split("=");
             if (keyValue.length > 1) {
-                contact.addType(keyValue[1]);
+                contact.addType(keyValue[1].toLowerCase());
             } else {
                 contact.label = part;
                 if (part.equals("N")) {
@@ -101,7 +112,7 @@ public class VCard extends Model {
                     this.fullName = value;
                 }
                 if (part.equals("ORG")) {
-                    this.organisation = value;
+                    this.organisation = Organisation.findOrCreatyByName(value);
                 }
             }
         }
@@ -112,40 +123,34 @@ public class VCard extends Model {
 
     @Override
     public String toString() {
-        /*
-        StringBuilder sb = new StringBuilder(this.uid+" #"+values.size()+" [");
-        for(String key : values.keySet()){
-        sb.append(key+":"+values.get(key)+" ");
-        }
-        sb.append("]");
-        return sb.toString();
-         */
         return this.fullName;
     }
 
-    public String toTableRow() {
-        StringBuilder sb = new StringBuilder("<tr>");
-        sb.append("<td style=\"vertical-align:top\">");
+    public String toHtml() {
+        StringBuilder sb = new StringBuilder("<h2>");
         sb.append(this.fullName);
-        sb.append("</td>");
+        sb.append("</h2>");
+        sb.append("<table>");
+        sb.append("<tr><th>Categories</th><th>Contact</th><th>Organisation</th></tr>");
+        sb.append("<tr>");
         sb.append("<td style=\"vertical-align:top\">");
         for (Category category : this.getCategories()) {
             sb.append(category);
             sb.append("<br />");
         }
         sb.append("</td>");
-        sb.append("<td style=\"vertical-align:top\">");
+        sb.append("<td style=\"vertical-align:top\"><table>");
         for (Contact contact : this.getContacts()) {
-            sb.append(contact);
-            sb.append("<br />");
+            sb.append(contact.toTableRow());
         }
-        sb.append("</td>");
+        sb.append("</table></td>");
         sb.append("<td style=\"vertical-align:top\">");
         if (this.organisation != null) {
             sb.append(this.organisation);
         }
         sb.append("</td>");
         sb.append("</tr>");
+        sb.append("</table>");
         return sb.toString();
     }
 

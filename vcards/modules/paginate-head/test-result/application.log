@@ -1,0 +1,4 @@
+26 Jul 2011 09:53:13,806 INFO  ~ Starting D:\Programming\Projects\Personal\Utils\PlayModules\paginate\.
+26 Jul 2011 09:53:14,203 WARN  ~ You're running Play! in DEV mode
+26 Jul 2011 09:53:14,801 INFO  ~ Connected to jdbc:h2:mem:play;MODE=MYSQL;DB_CLOSE_ON_EXIT=FALSE
+26 Jul 2011 09:53:15,285 INFO  ~ Application 'paginate-unittest' is now started !

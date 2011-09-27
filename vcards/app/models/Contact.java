@@ -41,12 +41,28 @@ public class Contact extends Model {
         }
         return this.types;
     }
+
+    private String formatValueHTML(String value){
+        String parts[] = value.split(";");
+        String out = "";
+        for(String part : parts){
+            if(!part.isEmpty()){
+                out += part+"<br />";
+            }
+        }
+        return out;
+    }
     
     @Override
     public String toString(){
-        StringBuilder sb = new StringBuilder();
+        return this.label+": "+this.value;
+    }
+
+    public String toTableRow(){
+        StringBuilder sb = new StringBuilder("<tr>");
+        sb.append("<td style=\"vertical-align:top\">");
         sb.append(label);
-        sb.append(": ");
+        sb.append(":</td><td>");
         if(label.equals("TEL")){
             sb.append("<a href=\"tel:");
             sb.append(value);
@@ -68,18 +84,19 @@ public class Contact extends Model {
             sb.append("\">");
         }
 
-        sb.append(value);
+        sb.append(formatValueHTML(value));
         if(label.equals("TEL") ||
            label.equals("URL") ||
            label.equals("EMAIL") ||
            label.equals("X-JABBER") ){
            sb.append("</a>");
         }
-        sb.append(" ");
+        sb.append("</td><td>");
         for(Type type : this.getTypes()){
             sb.append(type);
             sb.append(" ");
         }
+        sb.append("</td></tr>");
         return sb.toString();
     }
 }

@@ -9,9 +9,12 @@ package helper;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import models.Organisation;
 import models.VCard;
+import play.Logger;
 
 public class VCardHelper {
+
     /**
      * URL;type=WORK;type=pref:http\://www.example.com
      * parts = ["URL;type=WORK;type=pref", "http\", "//www.example.com"]
@@ -19,17 +22,23 @@ public class VCardHelper {
      * @return
      */
     private static String[] fixForUrl(String line) {
-        line = line.replace("\\:", "####");
+        line = line.replace("://", "####");
         String parts[] = line.split(":");
-        for(int i=0; i < parts.length; i++){
-            parts[i] = parts[i].replace("####", ":");
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = parts[i].replace("####", "://").replace("\\:", ":");
         }
         return parts;
     }
+    private static String fixForItems(String line){
+        String parts[] =  line.split(".");
+        if(parts.length > 1){
+            return parts[1];
+        }
+        return "";
+    }
 
     public enum KEYS {
-
-        VERSION, N, FN, NICKNAME, CATEGORIES, ORG, XABSHOWAS, TITLE, NOTE, SORTSTRING, CLASS, BDAY, PRODID, UID
+        VERSION, N, FN, NICKNAME, CATEGORIES, ORG, XABSHOWAS, TITLE, NOTE, SORTSTRING, CLASS, BDAY, PRODID, UID, XABADR, ADR
     };
 
     public static List<VCard> createVCsWithContent(String content) {
@@ -43,7 +52,7 @@ public class VCardHelper {
         return cards;
     }
 
-    private static File createAvatarFromContent(String content) {
+    private static File createAvatarFromBase64(String content) {
         String base64 = "";
         String[] parts = content.split("\n");
         for (String part : parts) {
@@ -51,25 +60,64 @@ public class VCardHelper {
                 base64 += part.trim();
             }
         }
-        //Logger.info("avatar base64: " + base64);
+        Logger.info("avatar base64: " + base64.length());
         return null;
     }
 
-    private static String getUid(String content) {
+    //TYPE=JPEG:http://www.example.com/xyz
+    private static File createAvatarFromUrl(String content){
+        String parts[] = content.split(":");
+        String url = "";
+        String ext = parts[0].replace("TYPE=", "").toLowerCase();
+        for(int i = 1; i < parts.length; i++){
+            url += parts[i]+":";
+        }
+        parts = url.split("\n");
+        url = parts[0];
+        Logger.info("url: "+url+" ext: "+ext);
+        return null;
+    }
+
+    private static String getFullname(String content){
+        String parts[];
         for (String line : content.split("\n")) {
-            if (line.startsWith("X-ABUID:")) {
-                return line.replace("X-ABUID:", "");
-            }
-            if (line.startsWith("UID:")) {
-                return line.replace("UID:", "");
+            if (line.startsWith("FN")) {
+                parts = line.split(":");
+                return parts[1];
             }
         }
         return "";
     }
 
-    public static String checkGetEncoding(String content){
-        for(String line : content.split("\n")){
-            if(line.contains("CHARSET=")){
+    private static String getBirthday(String content){
+        String parts[];
+        for (String line : content.split("\n")) {
+            if (line.startsWith("BDAY")) {
+                parts = line.split(":");
+                return parts[1];
+            }
+        }
+        return "";
+    }
+
+    private static File createPicture(String content) {
+        String[] parts = null;
+        for (String line : content.split("\n")) {
+            if (line.startsWith("PHOTO;BASE64:")) {
+                parts = content.split("PHOTO;BASE64:");
+                return createAvatarFromBase64(parts[1]);
+            }
+            if(line.startsWith("PHOTO;VALUE=URL;")){
+                parts = content.split("PHOTO;VALUE=URL;");
+                return createAvatarFromUrl(parts[1]);
+            }
+        }
+        return null;
+    }
+
+    public static String checkGetEncoding(String content) {
+        for (String line : content.split("\n")) {
+            if (line.contains("CHARSET=")) {
                 String parts[] = line.split("CHARSET=");
                 parts = parts[1].split(":");
                 return parts[0].trim();
@@ -77,27 +125,32 @@ public class VCardHelper {
         }
         return "UTF-8";
     }
-    
+
     public static VCard createVCWithContent(String content) {
-        String uid = getUid(content);
-        VCard card = VCard.findByUid(uid);
+        String fullName = getFullname(content);
+        String birthday = getBirthday(content);
+        VCard card = VCard.findByFullNameAndBirthday(fullName, birthday);
         if (card == null) {
             card = new VCard();
-            card.uid = uid;
+            card.birthday = birthday;
+            card.fullName = fullName;
         }
         String[] lines = content.split("\n");
         String[] parts = null;
+        String value;
         for (String line : lines) {
-            if (line.startsWith("PHOTO;BASE64:")) {
-                parts = content.split("PHOTO;BASE64:");
-                card.photo = createAvatarFromContent(parts[1]);
+            if (line.startsWith("PHOTO;")) {
+                parts = content.split("PHOTO;");
+                card.photo = createPicture("PHOTO;"+parts[1]);
             } else if (!line.startsWith("X-ABUID:")
                     && !line.startsWith("UID")
-                    && !line.startsWith("END:VCARD")
-                    && !line.startsWith("item")) {
-
+                    && !line.startsWith("BDAY")
+                    && !line.startsWith("END:VCARD")) {
+                if(line.startsWith("item")){
+                    line = fixForItems(line);
+                }
                 parts = line.split(":");
-                if(line.startsWith("URL")){
+                if (line.startsWith("URL")) {
                     parts = fixForUrl(line);
                 }
                 if (parts.length > 1 && parts[0].split(";").length > 1) {
@@ -120,7 +173,8 @@ public class VCardHelper {
                             card.addCategories(parts[1]);
                             break;
                         case ORG:
-                            card.organisation = parts[1].substring(0, parts[1].length() - 1);
+                            value = parts[1].substring(0, parts[1].length() - 1);
+                            card.organisation = Organisation.findOrCreatyByName(value);
                             break;
                         case SORTSTRING:
                             card.nickName = parts[1];
@@ -135,10 +189,8 @@ public class VCardHelper {
                             card.showAs = parts[1];
                             break;
                         case CLASS:
-                            card.addContact("CLASS", "value=access:"+parts[1]);
-                            break;
-                        case BDAY:
-                            card.addContact("BDAY", "value=date:"+parts[1]);
+                            value = "value=access:" + parts[1];
+                            card.addContact("CLASS", value);
                             break;
                         default:
                     }

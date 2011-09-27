@@ -2,13 +2,14 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+GET     /vcards/_show/{uid}         VCards._show
 
-POST    /vcards/read             VCards.read
+POST    /vcards/read                VCards.read
 
-GET    /vcards             VCards.index
+GET    /vcards                      VCards.index
 
 # Home page
-GET     /                                       VCards.index
+GET     /                           VCards.index
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
