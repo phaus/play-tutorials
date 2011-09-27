@@ -30,3 +30,5 @@ vcards/test/single.vcf
 vcards/test/group.vcf
 
 **/nbproject
+
+**/data/attachments/*

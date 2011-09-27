@@ -2,6 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+GET     /vcards/photo/{uid}         VCards.photo
+
 GET     /vcards/_show/{uid}         VCards._show
 
 POST    /vcards/read                VCards.read

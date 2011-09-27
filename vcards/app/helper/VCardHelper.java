@@ -52,32 +52,6 @@ public class VCardHelper {
         return cards;
     }
 
-    private static File createAvatarFromBase64(String content) {
-        String base64 = "";
-        String[] parts = content.split("\n");
-        for (String part : parts) {
-            if (part.startsWith("  ")) {
-                base64 += part.trim();
-            }
-        }
-        Logger.info("avatar base64: " + base64.length());
-        return null;
-    }
-
-    //TYPE=JPEG:http://www.example.com/xyz
-    private static File createAvatarFromUrl(String content){
-        String parts[] = content.split(":");
-        String url = "";
-        String ext = parts[0].replace("TYPE=", "").toLowerCase();
-        for(int i = 1; i < parts.length; i++){
-            url += parts[i]+":";
-        }
-        parts = url.split("\n");
-        url = parts[0];
-        Logger.info("url: "+url+" ext: "+ext);
-        return null;
-    }
-
     private static String getFullname(String content){
         String parts[];
         for (String line : content.split("\n")) {
@@ -98,21 +72,6 @@ public class VCardHelper {
             }
         }
         return "";
-    }
-
-    private static File createPicture(String content) {
-        String[] parts = null;
-        for (String line : content.split("\n")) {
-            if (line.startsWith("PHOTO;BASE64:")) {
-                parts = content.split("PHOTO;BASE64:");
-                return createAvatarFromBase64(parts[1]);
-            }
-            if(line.startsWith("PHOTO;VALUE=URL;")){
-                parts = content.split("PHOTO;VALUE=URL;");
-                return createAvatarFromUrl(parts[1]);
-            }
-        }
-        return null;
     }
 
     public static String checkGetEncoding(String content) {
@@ -141,7 +100,7 @@ public class VCardHelper {
         for (String line : lines) {
             if (line.startsWith("PHOTO;")) {
                 parts = content.split("PHOTO;");
-                card.photo = createPicture("PHOTO;"+parts[1]);
+                card = PhotoHelper.addPhoto("PHOTO;"+parts[1], card);
             } else if (!line.startsWith("X-ABUID:")
                     && !line.startsWith("UID")
                     && !line.startsWith("BDAY")

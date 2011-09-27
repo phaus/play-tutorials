@@ -36,11 +36,18 @@ public class VCards extends Controller {
         render(cards, content, count);
     }
 
-    public static void _show(Long id){
+    public static void _show(Long id) {
         VCard card = VCard.findById(id);
         render(card);
     }
-    
+
+    public static void photo(long id) {
+        VCard card = VCard.findById(id);
+        notFoundIfNull(card);
+        response.setContentTypeIfNotSet(card.photo.type());
+        renderBinary(card.photo.get());
+    }
+
     public static void index() {
         ModelPaginator paginator = new ModelPaginator(VCard.class).orderBy("fullName ASC");
         render(paginator);

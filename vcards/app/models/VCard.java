@@ -13,14 +13,13 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+import play.db.jpa.Blob;
 import play.db.jpa.Model;
 
 @Entity
 public class VCard extends Model {
 
-    @Transient
-    public File photo;
+    public Blob photo;
     public String name;
     public String nickName;
     public String fullName;
@@ -62,6 +61,10 @@ public class VCard extends Model {
         return VCard.find(" name = ?", name).first();
     }
 
+    public void setPhoto(File photo){
+
+    }
+    
     public List<Category> getCategories() {
         if (this.categories == null) {
             this.categories = Category.find("card = ?", this.id).fetch();
@@ -127,9 +130,7 @@ public class VCard extends Model {
     }
 
     public String toHtml() {
-        StringBuilder sb = new StringBuilder("<h2>");
-        sb.append(this.fullName);
-        sb.append("</h2>");
+        StringBuilder sb = new StringBuilder();
         sb.append("<table>");
         sb.append("<tr><th>Categories</th><th>Contact</th><th>Organisation</th></tr>");
         sb.append("<tr>");

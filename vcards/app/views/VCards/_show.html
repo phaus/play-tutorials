@@ -1,3 +1,10 @@
+<div style="float:left">
+    <img src="@{VCards.photo(card.id)}" />
+    <h2>${card.fullName}</h2>
+</div>
+<div style="float:left">
 #{verbatim}
     ${card.toHtml()}
 #{/verbatim}
+</div>
+<div style="clear:both"/>
