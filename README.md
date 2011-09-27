@@ -8,9 +8,18 @@ Unzip the archive and add the play command to you path.
 
 ## Examples
 
+The apps are configured to run with a mysql Database. You can always change the Database by editing app/conf/application.conf.
+
+db=mem for in-Memory Database.
+db=fs for a file based Database (H2).
+
 ### bookmarks
 
 This is a simple bookmarks listing application. You start this example with *play run* in the bookmarks directory.
+
+### vcards
+
+This is an app for parsing vcards to a Database. The app will also support export to VCard Format in the future.
 
 ## Links
 
