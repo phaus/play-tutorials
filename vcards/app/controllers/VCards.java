@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.List;
 import models.VCard;
 import play.Logger;
+import play.Play;
 import play.libs.IO;
 import play.modules.paginate.ModelPaginator;
 import play.mvc.Controller;
@@ -43,9 +44,12 @@ public class VCards extends Controller {
 
     public static void photo(long id) {
         VCard card = VCard.findById(id);
-        notFoundIfNull(card);
-        response.setContentTypeIfNotSet(card.photo.type());
-        renderBinary(card.photo.get());
+        if (card.photo != null && card.photo.get() != null) {
+            response.setContentTypeIfNotSet(card.photo.type());
+            renderBinary(card.photo.get());
+        } else {
+            renderBinary(Play.getFile("public/images/no_user.png"));
+        }
     }
 
     public static void index() {

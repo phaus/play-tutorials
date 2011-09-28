@@ -6,12 +6,10 @@
  */
 package helper;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import models.Organisation;
 import models.VCard;
-import play.Logger;
 
 public class VCardHelper {
 
