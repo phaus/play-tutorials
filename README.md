@@ -21,6 +21,9 @@ This is a simple bookmarks listing application. You start this example with *pla
 
 This is an app for parsing vcards to a Database. The app will also support export to VCard Format in the future.
 
+### logr
+
+This should demonstrate some simple Multidimensional Database Operations. The Use-Case is, to import different Log-Files (Apache2, MySql e.g.) and plott them towards date/host/type and count()/sum().
 ## Links
 
 - You can find more about these Tutorials [in my blog](http://www.philipp.haussleiter.de/category/play-framework/).

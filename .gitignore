@@ -1,27 +1,6 @@
-
-bookmarks/.DS_Store
-
-bookmarks/tmp/*
-
-bookmarks/db/*
-
-bookmarks/nbproject
-
 */.DS_Store
 
-bookmarks/public/.DS_Store
-
 **/.DS_Store
-
-bookmarks/public/javascripts/.DS_Store
-
-vcards/db/*
-
-vcards/tmp/*
-
-vcards/nbproject/project.xml
-
-vcards/tmp/*
 
 .DS_Store
 
@@ -29,6 +8,12 @@ vcards/test/single.vcf
 
 vcards/test/group.vcf
 
+**/.DS_Store
+
 **/nbproject
 
 **/data/attachments/*
+
+**/tmp/*
+
+**/db/*
