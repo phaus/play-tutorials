@@ -6,6 +6,7 @@
  */
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -13,7 +14,7 @@ import play.cache.Cache;
 import play.db.jpa.Model;
 
 @Entity
-public class EventType extends Model {
+public class LogEventType extends Model {
 
     @OneToMany(mappedBy = "type")
     public List<Event> events;
@@ -21,15 +22,19 @@ public class EventType extends Model {
     public String label;
 
 
-    public static EventType findOrCreateByLabel(String label){
+    public LogEventType(){
+        this.events = new ArrayList<Event>();
+    }
+
+    public static LogEventType findOrCreateByLabel(String label){
         String key = "EventType-"+label;
-        EventType eventtype = Cache.get(key, EventType.class);
+        LogEventType eventtype = Cache.get(key, LogEventType.class);
         if(eventtype != null){
             return eventtype;
         }
-        eventtype = EventType.find(" label = ?", label).first();
+        eventtype = LogEventType.find(" label = ?", label).first();
         if(eventtype == null){
-            eventtype = new EventType();
+            eventtype = new LogEventType();
             eventtype.label = label;
             eventtype.save();
             Cache.set(key, eventtype, "1d");

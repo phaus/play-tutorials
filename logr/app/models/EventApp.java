@@ -6,6 +6,7 @@
  */
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -18,6 +19,10 @@ public class EventApp extends Model {
     public List<Event> events;
 
     public String label;
+
+    public EventApp(){
+        this.events = new ArrayList<Event>();
+    }
 
     public static EventApp findOrCreateByLabel(String label){
         String key = "EventApp-"+label;

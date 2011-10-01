@@ -6,6 +6,7 @@
  */
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -26,8 +27,11 @@ public class EventTime extends Model {
     public int second;
     long milliseond;
 
-    public EventTime(){}
+    public EventTime(){
+        this.events = new ArrayList<Event>();
+    }
     public EventTime(int year, int month, int day, int hour, int minute, int second, long milliseond){
+        this.events = new ArrayList<Event>();
         this.year = year;
         this.month = month;
         this.day = day;

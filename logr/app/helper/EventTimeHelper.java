@@ -21,6 +21,8 @@ public class EventTimeHelper {
     };
 
     public static EventTime getEventTimeFromString(String dateString) {
+        dateString = dateString.trim();
+        //Logger.info("searching for timestamp: "+dateString);
         String parts1[];
         String parts2[];
         String parts3[];
@@ -29,6 +31,7 @@ public class EventTimeHelper {
             parts1 = dateString.split(" ");
             parts2 = parts1[0].split(":");
             parts3 = parts2[0].split("/");
+            /*
             Logger.info("creating:"     + getYear(parts3[2]) + "-"
                                         + getMonthNumber(parts3[1]) + "-"
                                         + getDay(parts3[0]) + "-"
@@ -36,6 +39,7 @@ public class EventTimeHelper {
                                         + getMinute(parts2[2]) + "-"
                                         + getSecond(parts2[3]) + "-"
                                         + getMillisecond(""));
+             */
             return EventTime.findOrCreateWith(
                     getYear(parts3[2]),
                     getMonthNumber(parts3[1]),
@@ -48,6 +52,7 @@ public class EventTimeHelper {
         if (dateString.length() == DATE2.length()) {
             parts1 = dateString.split(" ");
             parts2 = parts1[2].split(":");
+            /*
             Logger.info("creating:"     + getYear("") + "-"
                                         + getMonthNumber(parts1[0]) + "-"
                                         + getDay(parts1[1]) + "-"
@@ -55,6 +60,7 @@ public class EventTimeHelper {
                                         + getMinute(parts2[1]) + "-"
                                         + getSecond(parts2[2]) + "-"
                                         + getMillisecond(""));
+             */
             return EventTime.findOrCreateWith(
                     getYear(""),
                     getMonthNumber(parts1[0]),

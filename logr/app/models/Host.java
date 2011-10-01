@@ -6,6 +6,7 @@
  */
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -16,11 +17,14 @@ import play.db.jpa.Model;
 public class Host extends Model {
 
     @OneToMany(mappedBy = "host")
-    public List<Event> events;
+    public List<Log> logs;
 
     public String hostname;
     public String dnsHostname;
 
+    public Host(){
+        this.logs = new ArrayList<Log>();
+    }
 
     public static Host findOrCreateByHostname(String hostname){
         String key = "Host-"+hostname;

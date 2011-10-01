@@ -1,12 +1,12 @@
 package controllers;
 
 import helper.EventTimeHelper;
+import helper.LogHelper;
+import java.io.File;
+import models.Log;
 import play.*;
 import play.mvc.*;
-
-import java.util.*;
-
-import models.*;
+import play.libs.IO;
 
 public class Application extends Controller {
 
@@ -20,6 +20,16 @@ public class Application extends Controller {
         EventTimeHelper.getEventTimeFromString("Feb 01 06:29:38");
         EventTimeHelper.getEventTimeFromString("[31/May/2010:17:05:18 +0200]");
         render();
+    }
+
+    public static void read(File log) {
+        Logger.info("tmp file: " + log.getAbsolutePath());
+        String content = IO.readContentAsString(log);
+        Log logO = new Log();
+        logO.name = log.getName();
+        LogHelper.parseLog(content, logO);
+        //Logger.info("vcard content: \n\n" + content + "\n\n");
+        index();
     }
 
 }
