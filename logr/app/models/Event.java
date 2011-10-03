@@ -6,8 +6,10 @@
  */
 package models;
 
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import play.db.jpa.Model;
 import play.libs.Codec;
@@ -27,6 +29,9 @@ public class Event extends Model {
     @ManyToOne
     public EventApp app;
 
+    @ManyToMany
+    public List<Filter> filters;
+    
     @Lob
     public String message;
 

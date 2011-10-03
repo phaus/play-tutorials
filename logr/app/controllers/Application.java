@@ -5,6 +5,7 @@ import helper.LogHelper;
 import java.io.File;
 import models.Log;
 import play.*;
+import play.libs.Codec;
 import play.mvc.*;
 import play.libs.IO;
 
@@ -25,10 +26,12 @@ public class Application extends Controller {
     public static void read(File log) {
         Logger.info("tmp file: " + log.getAbsolutePath());
         String content = IO.readContentAsString(log);
-        Log logO = new Log();
-        logO.name = log.getName();
-        LogHelper.parseLog(content, logO);
-        //Logger.info("vcard content: \n\n" + content + "\n\n");
+        Log logO = Log.findOrCreateByChecksum(Codec.hexSHA1(content));
+        if(!logO.reloaded){
+            logO.name = log.getName();
+            LogHelper.parseLog(content, logO);
+            //Logger.info("vcard content: \n\n" + content + "\n\n");
+        }
         index();
     }
 
