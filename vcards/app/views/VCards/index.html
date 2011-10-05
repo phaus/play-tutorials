@@ -1,16 +1,52 @@
 #{extends 'main.html' /}
 #{set title:'VCards index' /}
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
 <script type="text/javascript">
     var listAction = #{jsAction @_show(':uid')  /};
     function load(id){
         $('#result').load(
-            listAction({uid: id}),
-            function() {
-                $('#content').css('visibility', 'visible')
-            }
-        )
+        listAction({uid: id}),
+        function() {
+            $('#content').css('visibility', 'visible')
+            $('#map_canvas').css('visibility', 'hidden');
+        }
+    )
     }
 
+    var geocoder;
+    var map;
+    function initialize() {
+        geocoder = new google.maps.Geocoder();
+        var latlng = new google.maps.LatLng(-34.397, 150.644);
+        var myOptions = {
+            zoom: 14,
+            //center: latlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    }
+
+    function codeAddress(address) {
+        //var address = document.getElementById("address").value;
+        $('#map_canvas').css('visibility', 'visible');
+        if (geocoder) {
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+                } else {
+                    alert("Geocode was not successful for the following reason: " + status);
+                }
+            });
+        }
+    }
+    $(function() {
+        initialize();
+    })
 </script>
 #{paginate.controls items:paginator /}
 <hr />
@@ -19,9 +55,9 @@
     <li><a href="javascript:load(${card.id})">${card}</a></li>
     #{/paginate.list}
 </ul>
-<div style="max-width: 75%;padding:10px;float:left" id="result">
-
+<div style="max-width:800px;padding:10px;float:left" id="result">
 </div>
+<div id="map_canvas" style="visibility: hidden; margin:10px;width: 320px; height: 320px;"></div>
 <div style="clear:both"></div>
 <hr />
 #{paginate.controls items:paginator /}

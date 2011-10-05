@@ -55,7 +55,7 @@ public class VCardHelper {
         for (String line : content.split("\n")) {
             if (line.startsWith("FN")) {
                 parts = line.split(":");
-                return parts[1];
+                return fixEncoding(parts[1]);
             }
         }
         return "";
@@ -81,6 +81,16 @@ public class VCardHelper {
             }
         }
         return "UTF-8";
+    }
+
+    private static String fixEncoding(String value){
+        String out = value;
+        String find[] = {"Ž", "Š", "š", "ź"};
+        String replace[] = {"é", "ä", "ö", "ü"};
+        for(int i=0; i < find.length; i++){
+            out = out.replace(find[i], replace[i]);
+        }
+        return out;
     }
 
     public static VCard createVCWithContent(String content) {
@@ -114,39 +124,40 @@ public class VCardHelper {
                     card.save();
                     card.addContact(parts[0], parts[1]);
                 } else if (parts.length > 1) {
+                    value = fixEncoding(parts[1]);
                     //card.values.put(parts[0], parts[1]);
                     switch (KEYS.valueOf(parts[0].replace("-", "").toUpperCase())) {
                         case N:
-                            card.name = parts[1];
+                            card.name = value;
                             break;
                         case FN:
-                            card.fullName = parts[1];
+                            card.fullName = value;
                             break;
                         case NICKNAME:
-                            card.nickName = parts[1];
+                            card.nickName = value;
                             break;
                         case CATEGORIES:
                             card.save();
-                            card.addCategories(parts[1]);
+                            card.addCategories(value);
                             break;
                         case ORG:
-                            value = parts[1].substring(0, parts[1].length() - 1);
+                            value = value.substring(0, value.length() - 1);
                             card.organisation = Organisation.findOrCreatyByName(value);
                             break;
                         case SORTSTRING:
-                            card.nickName = parts[1];
+                            card.nickName = value;
                             break;
                         case NOTE:
-                            card.note = parts[1];
+                            card.note = value;
                             break;
                         case TITLE:
-                            card.title = parts[1];
+                            card.title = value;
                             break;
                         case XABSHOWAS:
-                            card.showAs = parts[1];
+                            card.showAs = value;
                             break;
                         case CLASS:
-                            value = "value=access:" + parts[1];
+                            value = "value=access:" + value;
                             card.addContact("CLASS", value);
                             break;
                         default:

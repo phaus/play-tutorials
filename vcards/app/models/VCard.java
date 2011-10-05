@@ -123,9 +123,11 @@ public class VCard extends Model {
         this.contacts.add(contact);
     }
 
-
     @Override
     public String toString() {
+        if(this.fullName.length() > 30){
+            return this.fullName.substring(0, 30)+"...";
+        }
         return this.fullName;
     }
 
