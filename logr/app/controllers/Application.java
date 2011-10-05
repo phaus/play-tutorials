@@ -24,15 +24,17 @@ public class Application extends Controller {
     }
 
     public static void read(File log) {
-        Logger.info("tmp file: " + log.getAbsolutePath());
-        String content = IO.readContentAsString(log);
-        Log logO = Log.findOrCreateByChecksum(Codec.hexSHA1(content));
-        if(!logO.reloaded){
-            logO.name = log.getName();
-            LogHelper.parseLog(content, logO);
-            //Logger.info("vcard content: \n\n" + content + "\n\n");
+        if (log != null) {
+            Logger.info("tmp file: " + log.getAbsolutePath());
+            String content = IO.readContentAsString(log);
+            Log logO = Log.findOrCreateByChecksum(Codec.hexSHA1(content));
+            if (!logO.reloaded) {
+                logO.name = log.getName();
+                LogHelper.parseLog(content, logO);
+                //Logger.info("vcard content: \n\n" + content + "\n\n");
+            }
+
         }
         index();
     }
-
 }
