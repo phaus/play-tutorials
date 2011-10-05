@@ -131,31 +131,4 @@ public class VCard extends Model {
         return this.fullName;
     }
 
-    public String toHtml() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<table>");
-        sb.append("<tr><th>Categories</th><th>Contact</th><th>Organisation</th></tr>");
-        sb.append("<tr>");
-        sb.append("<td style=\"vertical-align:top\">");
-        for (Category category : this.getCategories()) {
-            sb.append(category);
-            sb.append("<br />");
-        }
-        sb.append("</td>");
-        sb.append("<td style=\"vertical-align:top\"><table>");
-        for (Contact contact : this.getContacts()) {
-            sb.append(contact.toTableRow());
-        }
-        sb.append("</table></td>");
-        sb.append("<td style=\"vertical-align:top\">");
-        if (this.organisation != null) {
-            sb.append(this.organisation);
-        }
-        sb.append("</td>");
-        sb.append("</tr>");
-        sb.append("</table>");
-        return sb.toString();
-    }
-
-
 }

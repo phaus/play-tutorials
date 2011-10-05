@@ -3,8 +3,6 @@
     <h2>${card.fullName}</h2>
 </div>
 <div style="float:left">
-#{verbatim}
-    ${card.toHtml()}
-#{/verbatim}
+    #{vcardToHtml vcard:card /}
 </div>
 <div style="clear:both"/>

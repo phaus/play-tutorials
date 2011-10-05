@@ -1,0 +1,30 @@
+<table>
+    <thead>
+        <tr><th>Categories</th><th>Contact</th><th>Organisation</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="vertical-align:top">
+                #{list _vcard.getCategories(), as:'category'}
+                ${category}<br />
+                #{/list}
+            </td>
+            <td style="vertical-align:top">
+                <table>
+                    <tbody>
+                        #{list _vcard.getContacts(), as:'contact'}
+                        #{verbatim}
+                        ${ contact.toTableRow() }
+                        #{/verbatim}
+                        #{/list}
+                    </tbody>
+                </table>
+            </td>
+            <td style="vertical-align:top">
+                #{if _vcard.organisation != null}
+                ${_vcard.organisation}
+                #{/if}
+            </td>
+        </tr>
+    </tbody>
+</table>
