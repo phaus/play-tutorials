@@ -6,9 +6,6 @@
  */
 package helper;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,42 +14,35 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import models.VCard;
 import play.Logger;
 import play.Play;
 import play.db.jpa.Blob;
+import play.libs.Codec;
 import play.libs.MimeTypes;
 
 public class PhotoHelper {
 
     private static File getPhotoFromBase64(String content) {
         File photo = null;
+        String base64 = "";
         try {
-            String base64 = "";
             String[] parts = content.split("\n");
             for (String part : parts) {
                 if (part.startsWith("  ")) {
                     base64 += part.trim();
                 }
             }
-            Logger.info("avatar base64: " + base64.length());
-            photo = new File(Play.tmpDir+"/"+System.currentTimeMillis());
+            photo = new File(Play.tmpDir+"/"+System.currentTimeMillis()+".png");
             if (!photo.exists()) {
                 photo.createNewFile();
             }
-            byte[] buf = base64.getBytes();
-            ImageIcon avatar = new ImageIcon(buf);
-            Image img = avatar.getImage();
-            BufferedImage bi = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_RGB);
-            Graphics2D g2 = bi.createGraphics();
-            g2.drawImage(img, 0, 0, null);
-            g2.dispose();
-            ImageIO.write(bi, "jpeg", photo);
+            byte[] buf = Codec.decodeBASE64(base64);
+            FileOutputStream osf = new FileOutputStream(photo);
+            osf.write(buf);
+            osf.flush();
         } catch (IOException ex) {
-            Logger.info(ex, ex.getLocalizedMessage());            
+            Logger.info(ex, ex.getLocalizedMessage());
         }
         return photo;
     }
@@ -98,12 +88,10 @@ public class PhotoHelper {
         String[] parts = null;
         File photo = null;
         for (String line : content.split("\n")) {
-            /*
             if (line.startsWith("PHOTO;BASE64:")) {
                 parts = content.split("PHOTO;BASE64:");
                 photo = getPhotoFromBase64(parts[1]);
             }
-            */
             if (line.startsWith("PHOTO;VALUE=URL;")) {
                 parts = content.split("PHOTO;VALUE=URL;");
                 photo = getPhotoFromUrl(parts[1]);
