@@ -1,0 +1,30 @@
+#{extends 'main.html' /}
+<h2>Votes</h2>
+<table class="entity Vote">
+	<thead>
+		<tr>
+			<th><!-- actions --></th>
+				<th>Session</th>
+				<th>Voter</th>
+				<th>Comment</th>
+				<th>Id</th>
+		</tr>
+	</thead>
+	<tbody>
+	#{list items:entities, as:'entity'}
+		<tr>
+			<td>
+				<a href="@{Votes.show(entity.id)}">Show</a>&nbsp;
+				<a href="@{Votes.edit(entity.id)}">Edit</a>&nbsp;
+				<a href="@{Votes.delete(entity.id)}" onclick="if (!confirm('Are you sure you want to delete this record?')) return false;">Delete</a>
+			</td>
+					<td>${entity.session}</td>
+					<td>${entity.voter}</td>
+					<td>${entity.comment}</td>
+					<td>${entity.id}</td>
+		</tr>
+	#{/list}
+	</tbody>
+</table>
+<a href="@{Votes.create}">Create</a>
+

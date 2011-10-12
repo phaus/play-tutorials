@@ -1,0 +1,38 @@
+#{extends 'main.html' /}
+<h2>View Vote</h2>
+<div class="entity">
+	<div class="row">
+		<span class="elem">
+			session:
+		</span>
+		<span class="value">
+      ${entity.session}
+		</span>
+	</div>
+	<div class="row">
+		<span class="elem">
+			voter:
+		</span>
+		<span class="value">
+      ${entity.voter}
+		</span>
+	</div>
+	<div class="row">
+		<span class="elem">
+			comment:
+		</span>
+		<span class="value">
+      ${entity.comment}
+		</span>
+	</div>
+	<div class="row">
+		<span class="elem">
+			id:
+		</span>
+		<span class="value">
+      ${entity.id}
+		</span>
+	</div>
+</div>
+<a href="@{Votes.index}">Back</a>
+

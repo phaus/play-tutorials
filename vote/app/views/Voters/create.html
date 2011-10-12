@@ -1,0 +1,10 @@
+#{extends 'main.html' /}
+<h2>Create Voter</h2>
+<div class="entity">
+#{form @Voters.save(), id:'createForm'}
+	#{include 'Voters/_form.html' /}
+	<input type="submit" name="submit" value="Save" />
+#{/form}
+</div>
+<a href="@{Voters.index}">Cancel</a>
+

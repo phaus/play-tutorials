@@ -1,0 +1,10 @@
+#{extends 'main.html' /}
+<h2>Edit RangeVoteEntry</h2>
+<div class="entity">
+#{form @RangeVoteEntrys.update(), id:'createForm'}
+	#{include 'RangeVoteEntrys/_form.html' /}
+	<input type="submit" name="submit" value="Save" />
+#{/form}
+</div>
+<a href="@{RangeVoteEntrys.index}">Cancel</a>
+

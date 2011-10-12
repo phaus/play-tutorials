@@ -1,0 +1,29 @@
+ <div class="row">
+  <div class="label">Uid</div>
+  <div class="field">
+      <input type="text" name="entity.uid" value="${entity?.uid}"/>
+  </div>
+  <span class="error">${errors.forKey('entity.uid')}</span>
+</div>
+ <div class="row">
+  <div class="label">Mail</div>
+  <div class="field">
+      <input type="text" name="entity.mail" value="${entity?.mail}"/>
+  </div>
+  <span class="error">${errors.forKey('entity.mail')}</span>
+</div>
+ <div class="row">
+  <div class="label">Display Name</div>
+  <div class="field">
+      <input type="text" name="entity.displayName" value="${entity?.displayName}"/>
+  </div>
+  <span class="error">${errors.forKey('entity.displayName')}</span>
+</div>
+ <div class="row">
+  <div class="label"></div>
+  <div class="field">
+      <input type="hidden" name="entity.id" value="${entity?.id}"/>
+  </div>
+  <span class="error">${errors.forKey('entity.id')}</span>
+</div>
+
