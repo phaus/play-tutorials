@@ -123,6 +123,10 @@ public class VCard extends Model {
         this.contacts.add(contact);
     }
 
+    public String getMail(){
+        return "";
+    }
+    
     @Override
     public String toString() {
         if(this.fullName.length() > 30){

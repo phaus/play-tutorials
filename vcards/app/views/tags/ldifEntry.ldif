@@ -1,0 +1,25 @@
+version: 1
+
+dn: ${_vcard.getDN()}
+#{list _vcard.objectClasses, as:'objectClass'}
+objectClass: ${objectClass}
+#{/list}
+cn: ${_vcard.cn}
+gidNumber: ${_vcard.gidNumber}
+homeDirectory: /home/${_vcard.name}
+jabberAccess: ${_vcard.jabberAccess}
+jabberID: ${_vcard.jabberID}
+sn: ${_vcard.sn}
+#{if !_vcard.getSSHKeyForLdif().isEmpty() }
+sshPublicKey:: ${_vcard.getSSHKeyForLdif()}
+#{/if}
+uid: ${_vcard.name}
+uidNumber: ${_vcard.nameNumber}
+displayName: ${_vcard.displayName}
+givenName: ${_vcard.givenName}
+#{if !_vcard.getAvatarForLdif().isEmpty() }
+jpegPhoto:: ${_vcard.getAvatarForLdif()}
+#{/if}
+loginShell: /bin/bash
+mail: ${_vcard.mail}
+mobile: ${_vcard.mobile}

@@ -1,0 +1,13 @@
+BEGIN:VCARD
+VERSION:3.0
+N:${_vcard.sn};${_vcard.givenName};;;
+FN:${_vcard.givenName} ${_vcard.sn}
+NICKNAME:${_vcard.name}
+EMAIL;type=INTERNET;type=WORK;type=pref:${_vcard.mail}
+TEL;type=CELL:${_vcard.mobile}
+X-JABBER;type=WORK:${_vcard.jabberID}
+#{if !_vcard.getAvatarForVcard().isEmpty() }
+PHOTO;BASE64:${_vcard.getAvatarForVcard()}
+#{/if}
+X-ABUID:${_vcard.getUserUUID()}\:ABPerson
+END:VCARD
