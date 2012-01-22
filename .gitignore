@@ -18,3 +18,4 @@ vcards/test/group.vcf
 
 **/db/*
 **/modules/*
+vcards/logs/system.out
