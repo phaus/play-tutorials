@@ -1,0 +1,14 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+<fieldset><legend>new Download</legend>
+<form action="@{Application.startdownload()}" method="POST" enctype="multipart/form-data">
+    <input size="50" type="test" id="url" name="url" />
+    <input type="submit" value="start Download" />
+</form>
+<br />
+
+</fieldset>
+<fieldset>
+<legend>recent Download</legend>
+
+</fieldset>
