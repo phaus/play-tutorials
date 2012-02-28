@@ -19,3 +19,7 @@ vcards/test/group.vcf
 **/db/*
 **/modules/*
 vcards/logs/system.out
+
+vidr/data/upload/*
+
+vidr/data/storage/*

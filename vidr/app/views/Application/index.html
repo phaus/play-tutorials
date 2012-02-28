@@ -1,0 +1,8 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+<ul>
+    <li><a href="@{Application.scan()}">run Scanner</a></li>
+    #{list videos, as:'video'}
+    <li>${video}</li>
+    #{/list}
+</ul>

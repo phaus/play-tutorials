@@ -1,0 +1,9 @@
+#{extends 'main.html' /}
+#{set title:'LOGR Home' /}
+
+<h1>Upload a Log File</h1>
+
+<form action="@{Application.read()}" method="POST" enctype="multipart/form-data">
+    <input type="file" id="log" name="log" />
+    <input type="submit" value="Send it..." />
+</form>
