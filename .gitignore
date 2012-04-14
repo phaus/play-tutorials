@@ -23,3 +23,5 @@ vcards/logs/system.out
 vidr/data/upload/*
 
 vidr/data/storage/*
+
+vcards/modules/paginate-head/commands.pyc
