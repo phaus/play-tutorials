@@ -6,10 +6,15 @@
  */
 package jobs;
 
+import helpers.SystemHelper;
+import helpers.parser.SimpeOutputPP;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.List;
 import models.Tag;
 import models.Video;
 import play.Logger;
@@ -19,18 +24,15 @@ import play.vfs.VirtualFile;
 
 public class VideoScanner extends Job {
 
+    // TODO Replace with settings from application.conf
+    private final static String USER = "philipp";
+    private final static String HOST = "localhost";
+    private static SystemHelper HELPER = new SystemHelper();
     private static VirtualFile INPUT;
     private static VirtualFile STORAGE;
     private final static String FFMPEG_CMD = "/usr/local/bin/ffmpeg";
-    private static String[] cmds = {
-        "/bin/bash",
-        "-c",
-        ""
-    };
-    private Runtime r;
 
     public VideoScanner() {
-        r = Runtime.getRuntime();
         VirtualFile appRoot = VirtualFile.open(Play.applicationPath);
         INPUT = appRoot.child(Play.configuration.getProperty("video.upload"));
         STORAGE = appRoot.child(Play.configuration.getProperty("video.storage"));
@@ -47,48 +49,48 @@ public class VideoScanner extends Job {
                 file = v.getRealFile();
                 video = Video.findOrCreateByFilename(file.getName().trim());
                 for (String p : getNameTags(file.getName())) {
-                    tag = Tag.findOrCreateByName(p.toLowerCase().trim());
-                    video.addTag(tag);
+                    if (!p.isEmpty()) {
+                        tag = Tag.findOrCreateByName(p.toLowerCase().trim());
+                        video.addTag(tag);
+                    }
                 }
-                getVideoTags(file.getAbsolutePath());
+                for (String p : getVideoTags(file.getAbsolutePath())) {
+                    if (!p.isEmpty()) {
+                        tag = Tag.findOrCreateByName(p.toLowerCase().trim());
+                        video.addTag(tag);
+                    }
+                }
                 video.save();
             }
         }
         Logger.info("done Scanning video folder");
     }
 
-    private String[] getNameTags(String filename) {
-        String find[] = {"-", " ", "_", ".", "?", "(", ")", "[", "]", "|"};
-        for (String f : find) {
-            filename = filename.replace(f, "-");
-        }
-        Logger.info("getNameTags: cleaned name: " + filename);
-        return filename.split("-");
-    }
-
-    private void getVideoTags(String filename) {
-        //String name = INPUT.getRealFile().getAbsolutePath() + "/" + filename;
-        String cmd = FFMPEG_CMD + " -i " + filename;
-        Logger.info("cmd: " + cmd);
-        Logger.info("result:\n" + getCallResult(cmd) + "\n");
-    }
-
-    private String getCallResult(String cmd) {
-        //"cmd /C dir"
-        StringBuilder sb = new StringBuilder();
+    private String[] getNameTags(String text) {
         try {
-            cmds[2] = '"'+cmd+'"';
-            Process p = r.exec(cmd);
-            Logger.info("running");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = reader.readLine();
-            while (line != null) {
-                sb.append(line);
-                line = reader.readLine();
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+            text = URLDecoder.decode(text, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            Logger.warn(ex.getLocalizedMessage());
         }
-        return sb.toString();
+        text = text.toLowerCase().replace("%", " ");
+        String[] findList = {" ", "#", "%", ":", "=", "\n", "_", "?", ".", ",", "!", "/", "\\", "\"", "„", "“", "(", ")", "[", "]", "{", "}", "<", ">"};
+        for (String find : findList) {
+            text = text.replace(find, "-");
+        }
+        Logger.info("getNameTags: cleaned name: " + text);
+        return text.split("-");
+    }
+
+    private String[] getVideoTags(String filename) {
+        String cmd = FFMPEG_CMD + " -i " + filename + " 2>&1 ";
+        String videoTags = "";
+        SimpeOutputPP sop = new SimpeOutputPP();
+        HELPER.runCommand(USER, HOST, cmd, sop);
+        for (String line : sop.getOutput()) {
+            if (line.startsWith("Stream")) {
+                videoTags += line.replace("Stream", "") + " ";
+            }
+        }
+        return getNameTags(videoTags);
     }
 }

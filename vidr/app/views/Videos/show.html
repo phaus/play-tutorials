@@ -1,0 +1,46 @@
+#{extends 'main.html' /}
+<h2>View Video</h2>
+<div class="entity">
+	<div class="row">
+		<span class="elem">
+			filename:
+		</span>
+		<span class="value">
+      ${entity.filename}
+		</span>
+	</div>
+	<div class="row">
+		<span class="elem">
+			duration:
+		</span>
+		<span class="value">
+      ${entity.duration}
+		</span>
+	</div>
+	<div class="row">
+		<span class="elem">
+			width:
+		</span>
+		<span class="value">
+      ${entity.width}
+		</span>
+	</div>
+	<div class="row">
+		<span class="elem">
+			height:
+		</span>
+		<span class="value">
+      ${entity.height}
+		</span>
+	</div>
+	<div class="row">
+		<span class="elem">
+			id:
+		</span>
+		<span class="value">
+      ${entity.id}
+		</span>
+	</div>
+</div>
+<a href="@{Videos.index}">Back</a>
+

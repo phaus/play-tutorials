@@ -1,0 +1,10 @@
+#{extends 'main.html' /}
+<h2>Edit Video</h2>
+<div class="entity">
+#{form @Videos.update(), id:'createForm'}
+	#{include 'Videos/_form.html' /}
+	<input type="submit" name="submit" value="Save" />
+#{/form}
+</div>
+<a href="@{Videos.index}">Cancel</a>
+

@@ -1,0 +1,36 @@
+ <div class="row">
+  <div class="label">Filename</div>
+  <div class="field">
+      <input type="text" name="entity.filename" value="${entity?.filename}"/>
+  </div>
+  <span class="error">${errors.forKey('entity.filename')}</span>
+</div>
+ <div class="row">
+  <div class="label">Duration</div>
+  <div class="field">
+      <input type="text" name="entity.duration" value="${entity?.duration}"/>
+  </div>
+  <span class="error">${errors.forKey('entity.duration')}</span>
+</div>
+ <div class="row">
+  <div class="label">Width</div>
+  <div class="field">
+      <input type="text" name="entity.width" value="${entity?.width}"/>
+  </div>
+  <span class="error">${errors.forKey('entity.width')}</span>
+</div>
+ <div class="row">
+  <div class="label">Height</div>
+  <div class="field">
+      <input type="text" name="entity.height" value="${entity?.height}"/>
+  </div>
+  <span class="error">${errors.forKey('entity.height')}</span>
+</div>
+ <div class="row">
+  <div class="label"></div>
+  <div class="field">
+      <input type="hidden" name="entity.id" value="${entity?.id}"/>
+  </div>
+  <span class="error">${errors.forKey('entity.id')}</span>
+</div>
+
